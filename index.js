@@ -1,5 +1,6 @@
 const express = require('express')
 var path = require('path');
+
 const fs = require('fs');
 function readFile(filePath) {
     try {
@@ -8,14 +9,33 @@ function readFile(filePath) {
     } catch (error) {
       console.error(`Got an error trying to read the file: ${error.message}`);
     }
-  }
+ }
 const app = express()
-const port = 3000
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+const port = 4000
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
   res.send('<script>window.location.href = window.location.href + "public/index.html";</script>')
 })
 
+app.post('/game', function (req, res) {
+    res.send("<p>you sent "+req.body.name+"</p>");
+    console.log(req.body);
+});
+app.post('/signin', function (req, res) {
+  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
+  console.log(json);
+  for (i in json) {
+    if(req.body.username == json[i].username && req.body.password == json[i].password){
+      res.send("<p>Logged in</p>");
+    }
+  }
+  console.log(req.body);
+});
+app.all('*', (req, res) => {
+    res.status(404).send('<h1>This page doesn'+"'"+'t exist, dumbass!</h1>');
+});
 app.listen(port, () => {
   console.log(`App listening on port ${port}`)
 })
