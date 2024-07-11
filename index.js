@@ -13,8 +13,8 @@ function readFile(filePath) {
     }
  }
  
- const sqlpass = readFile("sqlpass.txt");
- var con = mysql2.createConnection({
+const sqlpass = readFile("sqlpass.txt");
+var con = mysql2.createConnection({
   host: "localhost",
   user: "root",
   password: sqlpass
