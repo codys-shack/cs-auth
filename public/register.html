@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log in</title>
+</head>
+<body>
+    <form action="register" method="post">
+        <input type="text" name="username" placeholder="Username"/> <br>
+        <input type="password" name="password" placeholder="Password"/> <br>
+        <input type="submit" value="Register"/>
+    </form> 
+    <script src="script.js"></script>
+    <script>
+        // alert("asda");
+        url=window.location.href;
+        var params = url.split("?")[1].split("&");
+        // alert(params);
+        if(params.includes("status=nametaken")){
+            alert("this username is already taken");
+        }
+    </script>
+</body>
+</html>

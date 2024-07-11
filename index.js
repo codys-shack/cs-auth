@@ -33,6 +33,24 @@ app.post('/signin', function (req, res) {
   }
   console.log(req.body);
 });
+app.post('/register', function (req, res) {
+  // res.send("<p>you sent "+req.body+"</p>");
+  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
+  let sent = false;
+  for (i in json) {
+    if(req.body.username == json[i].username){
+      res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
+      sent = true;
+    }
+  }
+  if(sent == false){
+    res.send("<p>Registered succesfully</p>");
+  }
+  console.log(req.body);
+  
+  json.push({"username":req.body.username,"password":req.body.password});
+  fs.writeFileSync("./users.json",JSON.stringify(json));
+});
 app.all('*', (req, res) => {
     res.status(404).send('<h1>This page doesn'+"'"+'t exist, dumbass!</h1>');
 });
