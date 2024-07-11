@@ -1,5 +1,7 @@
 const express = require('express')
 var path = require('path');
+var mysql2 = require('mysql2');
+
 
 const fs = require('fs');
 function readFile(filePath) {
@@ -10,6 +12,18 @@ function readFile(filePath) {
       console.error(`Got an error trying to read the file: ${error.message}`);
     }
  }
+ 
+ const sqlpass = readFile("sqlpass.txt");
+ var con = mysql2.createConnection({
+  host: "localhost",
+  user: "root",
+  password: sqlpass
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("MySQL Connected!");
+});
 const app = express()
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -25,7 +39,7 @@ app.post('/game', function (req, res) {
 });
 app.post('/signin', function (req, res) {
   var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
-  console.log(json);
+  // console.log(json);
   for (i in json) {
     if(req.body.username == json[i].username && req.body.password == json[i].password){
       res.send("<p>Logged in</p>");
