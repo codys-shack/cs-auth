@@ -22,6 +22,9 @@ function readFile(filePath) {
 
 con.connect(function(err) {
   if (err) throw err;
+  con.query("USE db",function(err,result,fields){
+    if(err) throw err;
+  })
   console.log("MySQL Connected!");
 });
 const app = express()
@@ -38,32 +41,73 @@ app.post('/game', function (req, res) {
     console.log(req.body);
 });
 app.post('/signin', function (req, res) {
-  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
-  // console.log(json);
-  for (i in json) {
-    if(req.body.username == json[i].username && req.body.password == json[i].password){
-      res.send("<p>Logged in</p>");
-    }
-  }
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("MySQL Connected for Signin");
+    con.query("SELECT * FROM users",function(err,result,fields){
+      if (err) throw err;
+      var json = result;
+      for (i in json) {
+        if(req.body.username == json[i].username && req.body.password == json[i].password){
+          res.send("<p>Logged in</p>");
+        }
+      }
+    });    
+  });
+
   console.log(req.body);
 });
 app.post('/register', function (req, res) {
   // res.send("<p>you sent "+req.body+"</p>");
-  var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
-  let sent = false;
-  for (i in json) {
-    if(req.body.username == json[i].username){
-      res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
-      sent = true;
-    }
-  }
-  if(sent == false){
-    res.send("<p>Registered succesfully</p>");
-  }
-  console.log(req.body);
+  var sent = false;
+  con.connect(function(err) {
+    if (err) throw err;
+    console.log("MySQL Connected for Register");
+    con.query("SELECT * FROM users",function(err,result,fields){
+      if (err) throw err;
+      var json = result;
+      for (i in json) {
+        if(req.body.username == json[i].username){
+          res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
+          sent = true;
+        }
+        
+      }
+      var current_id;
+      con.query("SELECT MAX(id)+1 AS current_id FROM users;",function(err,result,fields){
+        if (err) throw err;
+        current_id = result[0].current_id;
+        // console.log(current_id+" a")
+        con.query("INSERT INTO users VALUES ("+current_id+",'"+req.body.username+"','"+req.body.password+"')",function(erra,resulta,fieldsa){
+          if (erra) throw erra;
+        }) 
+      });
+      if (sent == false){
+      res.send("Successfully registered!");
+      }
+    });
+   
+    // console.log(current_id+" b");
+       
+  });
+  // var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
+  // let sent = false;
+  // for (i in json) {
+  //   if(req.body.username == json[i].username){
+  //     res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
+  //     sent = true;
+  //   }
+  //   if(sent == false){
+  //     res.send("<p>Registered succesfully</p>");
+  //   }
+  // }
+  // if(sent == false){
+  //   res.send("<p>Registered succesfully</p>");
+  // }
+  // console.log(req.body);
   
-  json.push({"username":req.body.username,"password":req.body.password});
-  fs.writeFileSync("./users.json",JSON.stringify(json));
+  // json.push({"username":req.body.username,"password":req.body.password});
+  // fs.writeFileSync("./users.json",JSON.stringify(json));
 });
 app.all('*', (req, res) => {
     res.status(404).send('<h1>This page doesn'+"'"+'t exist, dumbass!</h1>');
