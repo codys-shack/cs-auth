@@ -41,6 +41,7 @@ app.post('/game', function (req, res) {
     console.log(req.body);
 });
 app.post('/signin', function (req, res) {
+  console.log(req.body.username +" is attempting to sign in with the password " +req.body.password);
   con.connect(function(err) {
     if (err) throw err;
     console.log("MySQL Connected for Signin");
@@ -50,15 +51,17 @@ app.post('/signin', function (req, res) {
       for (i in json) {
         if(req.body.username == json[i].username && req.body.password == json[i].password){
           res.send("<p>Logged in</p>");
+          console.log(req.body.username +" successfully signed in with the password " +req.body.password);
         }
       }
     });    
   });
-
-  console.log(req.body);
+  
+  // console.log(req.body);
 });
 app.post('/register', function (req, res) {
   // res.send("<p>you sent "+req.body+"</p>");
+  console.log("A user is attempting to register as " + req.body.username +" with the password " +req.body.password);
   var sent = false;
   con.connect(function(err) {
     if (err) throw err;
@@ -67,8 +70,10 @@ app.post('/register', function (req, res) {
       if (err) throw err;
       var json = result;
       for (i in json) {
-        if(req.body.username == json[i].username){
+        if(req.body.username == json[i].username && sent == false){
+          console.log("The username " + req.body.username +" is already taken");
           res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
+          // console.log("The username " + req.body.username +" is already taken");
           sent = true;
         }
         
@@ -83,31 +88,16 @@ app.post('/register', function (req, res) {
         }) 
       });
       if (sent == false){
-      res.send("Successfully registered!");
+        console.log("Tne user successfully registered as " + req.body.username +" with the password " +req.body.password);
+        res.send("Successfully registered!");
+      // console.log("Tne user successfully registered as " + req.body.username +" with the password " +req.body.password);
       }
     });
    
     // console.log(current_id+" b");
        
   });
-  // var json = JSON.parse(fs.readFileSync('./users.json', 'utf8'));
-  // let sent = false;
-  // for (i in json) {
-  //   if(req.body.username == json[i].username){
-  //     res.send('<script>window.location.href = window.location.href + ".html?status=nametaken";</script>');
-  //     sent = true;
-  //   }
-  //   if(sent == false){
-  //     res.send("<p>Registered succesfully</p>");
-  //   }
-  // }
-  // if(sent == false){
-  //   res.send("<p>Registered succesfully</p>");
-  // }
-  // console.log(req.body);
-  
-  // json.push({"username":req.body.username,"password":req.body.password});
-  // fs.writeFileSync("./users.json",JSON.stringify(json));
+
 });
 app.all('*', (req, res) => {
     res.status(404).send('<h1>This page doesn'+"'"+'t exist, dumbass!</h1>');
