@@ -3,4 +3,4 @@ run npm install
 add a .env file with DBHOST, DBUSERNAME, DBPASSWORD, and DBNAME
 
 to run:
-run node --env-file .env index.js
+run node --env-file .env index.jsm

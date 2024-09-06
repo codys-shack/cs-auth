@@ -47,14 +47,21 @@ app.post('/signin', function (req, res) {
     if (err) throw err;
     console.log("MySQL Connected for Signin");
     con.query("SELECT * FROM users",function(err,result,fields){
+      let sent = false;
       if (err) throw err;
       var json = result;
       for (i in json) {
-        if(req.body.username == json[i].username && req.body.password == json[i].password){
+        if(req.body.username == json[i].username && req.body.password == json[i].password && sent == false){
           res.send("<p>Logged in</p>");
           console.log(req.body.username +" successfully signed in with the password " +req.body.password);
+          sent = true
         }
       }
+      if(sent == false){
+        res.send("<p>Wrong username/password</p>");
+        console.log(`${req.body.username} failed to log in with password ${req.body.password}`)
+      }
+
     });    
   });
   
