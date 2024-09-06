@@ -15,16 +15,17 @@ function readFile(filePath) {
  
 const sqlpass = readFile("sqlpass.txt");
 var con = mysql2.createConnection({
-  host: "localhost",
-  user: "root",
-  password: sqlpass
+  host: process.env.DBHOST,
+  user: process.env.DBUSERNAME,
+  password: process.env.DBPASSWORD,
+  database:process.env.DBNAME
 });
 
 con.connect(function(err) {
   if (err) throw err;
-  con.query("USE db",function(err,result,fields){
-    if(err) throw err;
-  })
+  // con.query("USE db",function(err,result,fields){
+  //   if(err) throw err;
+  // })
   console.log("MySQL Connected!");
 });
 const app = express()
@@ -83,9 +84,11 @@ app.post('/register', function (req, res) {
         if (err) throw err;
         current_id = result[0].current_id;
         // console.log(current_id+" a")
-        con.query("INSERT INTO users VALUES ("+current_id+",'"+req.body.username+"','"+req.body.password+"')",function(erra,resulta,fieldsa){
-          if (erra) throw erra;
-        }) 
+        if(sent!==true){
+          con.query("INSERT INTO users VALUES ("+current_id+",'"+req.body.username+"','"+req.body.password+"')",function(erra,resulta,fieldsa){
+            if (erra) throw erra;
+          }) 
+        }
       });
       if (sent == false){
         console.log("Tne user successfully registered as " + req.body.username +" with the password " +req.body.password);
