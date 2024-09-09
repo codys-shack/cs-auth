@@ -7,4 +7,9 @@ Places to edit:
         //3
         The code to execute on a failed login
         //4
-        
+        the code to be executed on a failed register
+        //5
+        The code to be executed on a succesfull register
+        //6
+        The code to be executed on a 404 page not found
+To set up your website, put the website files in the "public" folder, but make sure that you keep register.html and signin.html
