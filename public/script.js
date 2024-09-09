@@ -1,4 +1,3 @@
-// const { get } = require("https");
 
 /**
  * Gets the URL of the current page without the path
@@ -23,7 +22,7 @@ function getCookie(cname) {
     return "";
 }
 /**
- * Identifies the user with an id and a type
+ * Identifies the user with an id and a type, possibly broken idk
  * @param {string} id 
  * @param {string} type 
  */
@@ -37,4 +36,3 @@ function mark(id,type) {
     }
     
 }
-// mark("fadsfsa","fdasf");

@@ -13,10 +13,8 @@
     </form> 
     <script src="script.js"></script>
     <script>
-        // alert("asda");
         url=window.location.href;
         var params = url.split("?")[1].split("&");
-        // alert(params);
         if(params.includes("status=nametaken")){
             alert("this username is already taken");
         }
