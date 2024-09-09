@@ -1,1 +1,10 @@
 Places to edit:
+    In index.js
+        //1
+        The port the server runs on
+        //2
+        The code to execute on a succesfull login
+        //3
+        The code to execute on a failed login
+        //4
+        
